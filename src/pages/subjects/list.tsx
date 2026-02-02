@@ -16,6 +16,14 @@ const SubjectList = () => {
     const [searchText, setSearchText] = useState("")
     const [selectedDepartment, setSelectedDepartment] = useState("all")
 
+    const departmentFilters= selectedDepartment === "all" ? [] : [
+       { field: 'department', operator: 'eq' as const, value: selectedDepartment } 
+    ]
+
+    const searchFilter = searchText ? [
+        { field: 'name', operator: 'contains' as const, value: searchText }
+    ] : []
+
     const subjectTable=useTable<Subject>({
         columns:useMemo<ColumnDef<Subject>[]>(()=>[
             {id:'code', accessorKey:'code',size:100,
@@ -23,6 +31,30 @@ const SubjectList = () => {
                 cell:({getValue})=>(
                     <Badge>{getValue<string>()}</Badge>
                 )
+            },
+            {
+                id:'name', accessorKey:'name',
+                header:() => <p className='column-title'>Name</p>,
+                cell:({getValue})=>(
+                    <span className='text-foreground'>{getValue<string>()}</span>
+                ),
+                filterFn:'includesString'
+            },
+            {
+                id:'department', accessorKey:'department',
+                size:150,
+                header:() => <p className='column-title'>Department</p>,
+                cell:({getValue})=>(
+                    <Badge variant='secondary'>{getValue<string>()}</Badge>
+                ),
+            },
+            {
+             id:'description', accessorKey:'description',
+                size:300,
+                header:() => <p className='column-title'>Description</p>,
+                cell:({getValue})=>(
+                    <span className='truncate line-clamp-2'>{getValue<string>()}</span>
+                ),   
             }
         ],[]
         ),
@@ -32,10 +64,17 @@ const SubjectList = () => {
                 pageSize: 10,
                 mode: "server",
               },
-              filters: {            
+              filters: {  
+                permanent:[
+                    ...departmentFilters,
+                    ...searchFilter
+                ]          
               },
               sorters:{
-
+                initial:[{
+                    field:'id',
+                    order:'desc'
+                }]
               }
         }
     })
