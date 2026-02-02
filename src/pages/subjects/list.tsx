@@ -2,19 +2,49 @@ import { CreateButton } from '@/components/refine-ui/buttons/create'
 import { DataTable } from '@/components/refine-ui/data-table/data-table'
 import { Breadcrumb } from '@/components/refine-ui/layout/breadcrumb'
 import { ListView } from '@/components/refine-ui/views/list-view'
+import { Badge } from '@/components/ui/badge' 
 import { SelectContent, SelectItem } from '@/components/ui/select'
 import { DEPARTMENTS_OPTIONS } from '@/constants'
 import { Subject } from '@/types'
 import { Select, SelectTrigger, SelectValue } from '@radix-ui/react-select'
-import { useTable } from '@refinedev/core'
+import { useTable } from '@refinedev/react-table'
+import { ColumnDef } from '@tanstack/react-table'
 import { Search } from 'lucide-react'
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 
 const SubjectList = () => {
     const [searchText, setSearchText] = useState("")
     const [selectedDepartment, setSelectedDepartment] = useState("all")
 
-    const subjectTable = useTable<Subject>();
+    const subjectTable=useTable<Subject>({
+        columns:useMemo<ColumnDef<Subject>[]>(()=>[
+            {id:'code', accessorKey:'code',size:100,
+                header:() => <p className='column-title ml-2'>Code</p>,
+                cell:({getValue})=>(
+                    <Badge>{getValue<string>()}</Badge>
+                )
+            }
+        ],[]
+
+        ),
+        refineCoreProps:{
+             resource:"subjects",
+             pagination: {
+                pageSize: 10,
+                mode: "server",
+              },
+              filters: {            
+              },
+              sorters:{
+
+              }
+
+        }
+       
+
+
+
+    })
   return (
    <ListView>
     <Breadcrumb/>
