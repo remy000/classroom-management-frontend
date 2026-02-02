@@ -25,7 +25,6 @@ const SubjectList = () => {
                 )
             }
         ],[]
-
         ),
         refineCoreProps:{
              resource:"subjects",
@@ -38,12 +37,7 @@ const SubjectList = () => {
               sorters:{
 
               }
-
         }
-       
-
-
-
     })
   return (
    <ListView>
@@ -83,5 +77,4 @@ const SubjectList = () => {
    </ListView>
   )
 }
-
 export default SubjectList
